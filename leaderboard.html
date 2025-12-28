@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,9 +30,9 @@
             --r-lg: 16px;
             --r-xl: 24px;
             --r-pill: 999px;
-            --shadow-sm: 0 2px 8px rgba(0,0,0,.1);
-            --shadow-md: 0 4px 12px rgba(0,0,0,.1);
-            --shadow-lg: 0 8px 32px rgba(0,0,0,.1);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, .1);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, .1);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, .1);
             --fast: .2s ease;
             --med: .3s ease;
         }
@@ -187,6 +188,7 @@
             min-width: 100px;
             flex-shrink: 0;
         }
+
         @media (max-width: 768px) {
             .container {
                 padding: var(--md);
@@ -240,17 +242,20 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
             <div class="live-indicator" id="data-status">
-                <span style="width: 8px; height: 8px; background: #28a745; border-radius: 50%; display: inline-block;"></span>
+                <span
+                    style="width: 8px; height: 8px; background: #28a745; border-radius: 50%; display: inline-block;"></span>
                 <span id="status-text">GLOBAL DATA</span>
             </div>
             <h1 class="title">
                 🏆 Impact Token Leaderboard
             </h1>
-            <p class="subtitle" id="subtitle-text">Real-time rankings of team members by Impact Tokens received <span style="color: #28a745; font-weight: 600;">(Global data)</span></p>
+            <p class="subtitle" id="subtitle-text">Real-time rankings of team members by Impact Tokens received <span
+                    style="color: #28a745; font-weight: 600;">(Global data)</span></p>
         </div>
 
         <div class="leaderboard" id="leaderboard">
@@ -263,9 +268,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0"></script>
     <script>
         // Initialize Supabase with your provided credentials
-        const SUPABASE_URL = 'https://ssrxybgexgntfdvkusyw.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzcnh5YmdleGdudGZkdmt1c3l3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk5NzYwMDEsImV4cCI6MjA3NTU1MjAwMX0._4WQ4uUE9ALjtZPSG11nouFA3MBftPgeCOf1trhoFlk';
-        
+        const SUPABASE_URL = 'https://fgpfkmbrnrhddznpnmbz.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZncGZrbWJybnJoZGR6bnBubWJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4OTc2ODIsImV4cCI6MjA4MjQ3MzY4Mn0.s_2dlVd3zH8GlshtzDW_znSMxbcxTXuvgHkCNpo4kJc';
+
         // Initialize Supabase client
         let supabase;
         try {
@@ -275,7 +280,7 @@
             console.error('Error initializing Supabase client:', error);
             supabase = null;
         }
-        
+
         // Load candidates from Supabase or use empty array
         const defaultCandidates = [];
 
@@ -285,31 +290,31 @@
                 console.error('Supabase client not initialized');
                 return defaultCandidates;
             }
-            
+
             try {
                 const { data, error } = await supabase
                     .from('candidates')
                     .select('*')
                     .order('name', { ascending: true });
-                
+
                 if (error) {
                     console.error('Error fetching candidates from Supabase:', error);
                     // More specific error handling
                     if (error.message) {
                         console.error('Error message:', error.message);
                         // Check for table not found
-                        if (error.message.includes('candidates') && 
-                            (error.message.includes('not found') || 
-                             error.message.includes('does not exist') ||
-                             error.message.includes('relation') ||
-                             error.message.includes('undefined_table'))) {
+                        if (error.message.includes('candidates') &&
+                            (error.message.includes('not found') ||
+                                error.message.includes('does not exist') ||
+                                error.message.includes('relation') ||
+                                error.message.includes('undefined_table'))) {
                             console.error('Candidates table not found in Supabase. Please create the table first.');
                         }
                         // Check for RLS/permission errors
-                        else if (error.message.includes('permission') || 
-                                 error.message.includes('denied') ||
-                                 error.message.includes('row-level security') ||
-                                 error.message.includes('42501')) {
+                        else if (error.message.includes('permission') ||
+                            error.message.includes('denied') ||
+                            error.message.includes('row-level security') ||
+                            error.message.includes('42501')) {
                             console.error('Permission denied. Please check Row Level Security (RLS) policies in Supabase.');
                         }
                         else {
@@ -318,7 +323,7 @@
                     }
                     return defaultCandidates;
                 }
-                
+
                 return data || defaultCandidates;
             } catch (err) {
                 console.error('Error loading candidates from Supabase:', err);
@@ -351,20 +356,20 @@
                 if (error) {
                     console.error('Error fetching votes from Supabase:', error);
                     // Check for table not found
-                    if (error.message && 
-                        error.message.includes('votes') && 
-                        (error.message.includes('not found') || 
-                         error.message.includes('does not exist') ||
-                         error.message.includes('relation') ||
-                         error.message.includes('undefined_table'))) {
+                    if (error.message &&
+                        error.message.includes('votes') &&
+                        (error.message.includes('not found') ||
+                            error.message.includes('does not exist') ||
+                            error.message.includes('relation') ||
+                            error.message.includes('undefined_table'))) {
                         console.error('Votes table not found in Supabase. Please create the table first.');
                     }
                     // Check for RLS/permission errors
-                    else if (error.message && 
-                             (error.message.includes('permission') || 
-                              error.message.includes('denied') ||
-                              error.message.includes('row-level security') ||
-                              error.message.includes('42501'))) {
+                    else if (error.message &&
+                        (error.message.includes('permission') ||
+                            error.message.includes('denied') ||
+                            error.message.includes('row-level security') ||
+                            error.message.includes('42501'))) {
                         console.error('Permission denied. Please check Row Level Security (RLS) policies in Supabase.');
                     }
                     else {
@@ -375,7 +380,7 @@
                 }
 
                 console.log(`Successfully fetched ${data.length} votes from Supabase`);
-                
+
                 // Convert Supabase data to the format expected by the leaderboard
                 const votes = data.map(vote => ({
                     id: vote.id || Date.now().toString() + Math.random(),
@@ -386,7 +391,7 @@
                     timestamp: vote.vote_timestamp,
                     valid: true
                 }));
-                
+
                 return { votes, isGlobal: true };
             } catch (err) {
                 console.error('Error loading votes from Supabase:', err);
@@ -403,7 +408,7 @@
             // Update UI to show data source (always global now)
             const statusText = document.getElementById('status-text');
             const subtitleText = document.getElementById('subtitle-text');
-            
+
             statusText.textContent = 'GLOBAL DATA';
             statusText.style.color = '#28a745';
             subtitleText.innerHTML = 'Real-time rankings of team members by Impact Tokens received <span style="color: #28a745; font-weight: 600;">(Global data)</span>';
@@ -468,7 +473,7 @@
 
         // Listen for storage changes (real-time updates when votes are cast)
         function listenForVoteUpdates() {
-            window.addEventListener('storage', function(e) {
+            window.addEventListener('storage', function (e) {
                 if (e.key === 'votes' || e.key === 'voters') {
                     console.log('Storage event detected, updating leaderboard');
                     renderLeaderboard();
@@ -476,11 +481,11 @@
             });
 
             // Also listen for our own localStorage changes (when set in the same window)
-            window.addEventListener('votesUpdated', function(e) {
+            window.addEventListener('votesUpdated', function (e) {
                 console.log('Custom votesUpdated event detected');
                 renderLeaderboard();
             });
-            
+
             // Listen for Supabase real-time updates (if Supabase is available)
             if (supabase) {
                 try {
@@ -517,4 +522,5 @@
         window.onload = startAutoRefresh;
     </script>
 </body>
+
 </html>
