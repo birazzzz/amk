@@ -17,8 +17,8 @@ try {
 const { createClient } = require('@supabase/supabase-js');
 
 // Supabase configuration - REPLACE THESE WITH YOUR ACTUAL CREDENTIALS
-const SUPABASE_URL = 'https://ssrxybgexgntfdvkusyw.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzcnh5YmdleGdudGZkdmt1c3l3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk5NzYwMDEsImV4cCI6MjA3NTU1MjAwMX0._4WQ4uUE9ALjtZPSG11nouFA3MBftPgeCOf1trhoFlk';
+const SUPABASE_URL = 'https://fgpfkmbrnrhddznpnmbz.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZncGZrbWJybnJoZGR6bnBubWJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4OTc2ODIsImV4cCI6MjA4MjQ3MzY4Mn0.s_2dlVd3zH8GlshtzDW_znSMxbcxTXuvgHkCNpo4kJc';
 
 console.log('Initializing Supabase client...');
 const sbClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
