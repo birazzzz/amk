@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting - Impact Token (IT) Voting</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        :root {
+            /* Design Guidelines Color Palette */
+            --bg: #edeae7;
+            --card: #ffffff;
+            --border: #dedede;
+            --hover: #81EDFF;
+            --text: #222222;
+            --text2: #666666;
+            --accent: #81EDFF;
+            --xs: 4px;
+            --sm: 8px;
+            --md: 16px;
+            --lg: 24px;
+            --xl: 32px;
+            --xxl: 40px;
+            --r-sm: 8px;
+            --r-md: 12px;
+            --r-lg: 16px;
+            --r-xl: 24px;
+            --r-pill: 999px;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,.1);
+            --shadow-md: 0 4px 12px rgba(0,0,0,.1);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,.1);
+            --fast: .2s ease;
+            --med: .3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--md);
+        }
+
+        .container {
+            background: var(--card);
+            border-radius: var(--r-xl);
+            box-shadow: var(--shadow-lg);
+            padding: var(--xxl);
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--xl);
+        }
+
+        .back-btn {
+            background: transparent;
+            color: var(--text2);
+            border: 2px solid var(--border);
+            padding: var(--sm) var(--md);
+            border-radius: var(--r-pill);
+            cursor: pointer;
+            transition: var(--fast);
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--xs);
+        }
+
+        .back-btn:hover {
+            background: var(--card);
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
+        .title {
+            color: var(--text);
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin-bottom: var(--sm);
+            text-align: center;
+        }
+
+        .subtitle {
+            color: var(--text2);
+            font-size: 1rem;
+            margin-bottom: var(--xl);
+            text-align: center;
+        }
+
+        .form-section {
+            margin-bottom: var(--xl);
+        }
+
+        .form-group {
+            margin-bottom: var(--lg);
+            text-align: left;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: var(--md);
+            margin-bottom: var(--lg);
+        }
+
+        .form-section label {
+            display: block;
+            margin-bottom: var(--xs);
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.85rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: var(--sm) var(--md);
+            border: 2px solid var(--border);
+            border-radius: var(--r-sm);
+            font-family: 'Manrope', sans-serif;
+            transition: var(--fast);
+            font-size: 1rem;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .candidates-section {
+            margin: var(--xl) 0;
+        }
+
+        .section-title {
+            color: var(--text);
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: var(--lg);
+            text-align: center;
+        }
+
+        .candidates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--md);
+            margin-bottom: var(--lg);
+        }
+
+        .candidate-card {
+            border: 2px solid var(--border);
+            border-radius: var(--r-lg);
+            padding: var(--lg);
+            cursor: pointer;
+            transition: var(--fast);
+            background: var(--card);
+            position: relative;
+        }
+
+        .candidate-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .candidate-card.selected {
+            border-color: var(--accent);
+            background: #f8f9ff;
+        }
+
+        .candidate-card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: var(--sm);
+            right: var(--sm);
+            background: var(--accent);
+            color: var(--text);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .candidate-name {
+            color: var(--text);
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: var(--xs);
+        }
+
+        .candidate-project {
+            color: var(--text2);
+            font-size: 0.9rem;
+            margin-bottom: var(--sm);
+        }
+
+        .candidate-description {
+            color: var(--text2);
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .submit-section {
+            text-align: center;
+            padding-top: var(--xl);
+            border-top: 1px solid var(--border);
+        }
+
+        .submit-btn {
+            background: var(--accent);
+            color: var(--text);
+            border: none;
+            padding: var(--md) var(--xl);
+            font-size: 1.1rem;
+            border-radius: var(--r-pill);
+            cursor: pointer;
+            transition: var(--fast);
+            font-weight: 600;
+            font-family: 'Manrope', sans-serif;
+            min-width: 200px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .selection-info {
+            background: #e8f4f8;
+            border: 1px solid var(--accent);
+            border-radius: var(--r-md);
+            padding: var(--md);
+            margin-bottom: var(--lg);
+            text-align: center;
+        }
+
+        .selection-count {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .form-row {
+                grid-template-columns: 1fr 1fr;
+                gap: var(--sm);
+            }
+            
+            .form-row .form-group:nth-child(3) {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--md);
+                margin: var(--sm);
+            }
+
+            .header {
+                flex-direction: column;
+                gap: var(--md);
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: var(--sm);
+            }
+
+            .candidates-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div style="flex: 1;"></div>
+        </div>
+
+        <h1 class="title">Award Impact Tokens</h1>
+        <p class="subtitle">Select team members and their projects to recognize with Impact Tokens</p>
+
+        <form id="voting-form">
+
+            <div class="form-section">
+                <h2 style="text-align: center; margin-bottom: 24px; color: #222;">Your Information</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="first-name">First Name:</label>
+                        <input type="text" id="first-name" name="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="last-name">Last Name:</label>
+                        <input type="text" id="last-name" name="lastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="candidates-section">
+                <h2 class="section-title">Select Team Members & Projects</h2>
+                
+                <!-- Search Bar -->
+                <div class="form-group">
+                    <input type="text" id="candidate-search" class="search-input" placeholder="Search candidates by name or project..." oninput="filterCandidates()">
+                </div>
+                
+                <div id="selection-info" class="selection-info" style="display: none;">
+                    <div class="selection-count">Selected: <span id="selected-count">0</span> team members (up to 10)</div>
+                </div>
+
+                <div class="candidates-grid" id="candidates-container">
+                    <!-- Candidates will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="submit-section">
+                <!-- Hidden fields for selected candidates data -->
+                <div id="hidden-fields" style="display: none;">
+                    <!-- These will be populated by JavaScript before form submission -->
+                </div>
+                <button type="submit" class="submit-btn" id="submit-btn">Give Impact Token</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0"></script>
+    <script>
+        // Initialize Supabase with your provided credentials
+        const SUPABASE_URL = 'https://ssrxybgexgntfdvkusyw.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzcnh5YmdleGdudGZkdmt1c3l3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk5NzYwMDEsImV4cCI6MjA3NTU1MjAwMX0._4WQ4uUE9ALjtZPSG11nouFA3MBftPgeCOf1trhoFlk';
+        
+        // Initialize Supabase client
+        let supabase;
+        try {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('Supabase client initialized successfully');
+        } catch (error) {
+            console.error('Error initializing Supabase client:', error);
+            supabase = null;
+        }
+
+        // Load candidates from Supabase or use empty array
+        const defaultCandidates = [];
+
+        // Load candidates from Supabase
+        async function loadCandidates() {
+            if (!supabase) {
+                console.error('Supabase client not initialized');
+                return defaultCandidates;
+            }
+            
+            try {
+                const { data, error } = await supabase
+                    .from('candidates')
+                    .select('*')
+                    .order('name', { ascending: true });
+                
+                if (error) {
+                    console.error('Error fetching candidates from Supabase:', error);
+                    // More specific error handling
+                    if (error.message) {
+                        console.error('Error message:', error.message);
+                        // Check for table not found
+                        if (error.message.includes('candidates') && 
+                            (error.message.includes('not found') || 
+                             error.message.includes('does not exist') ||
+                             error.message.includes('relation') ||
+                             error.message.includes('undefined_table'))) {
+                            console.error('Candidates table not found in Supabase. Please create the table first.');
+                        }
+                        // Check for RLS/permission errors
+                        else if (error.message.includes('permission') || 
+                                 error.message.includes('denied') ||
+                                 error.message.includes('row-level security') ||
+                                 error.message.includes('42501')) {
+                            console.error('Permission denied. Please check Row Level Security (RLS) policies in Supabase.');
+                        }
+                        else {
+                            console.error('Error fetching candidates: ' + error.message);
+                        }
+                    }
+                    return defaultCandidates;
+                }
+                
+                return data || defaultCandidates;
+            } catch (err) {
+                console.error('Error loading candidates from Supabase:', err);
+                return defaultCandidates;
+            }
+        }
+
+        // State management
+        window.selectedCandidates = [];
+
+        // Initialize the page
+        async function init() {
+            await renderCandidates();
+        }
+
+        // Render candidate cards
+        async function renderCandidates(candidatesToRender = null) {
+            const candidates = candidatesToRender || await loadCandidates();
+            const container = document.getElementById('candidates-container');
+
+            container.innerHTML = candidates.map(candidate => `
+                <div class="candidate-card" data-id="${candidate.id}" onclick="toggleCandidate(${candidate.id})">
+                    <div class="candidate-name">${candidate.name}</div>
+                    <div class="candidate-project">${candidate.project}</div>
+                </div>
+            `).join('');
+        }
+
+        // Filter candidates based on search input
+        async function filterCandidates() {
+            const searchTerm = document.getElementById('candidate-search').value.toLowerCase();
+            const allCandidates = await loadCandidates();
+            
+            if (!searchTerm) {
+                await renderCandidates();
+                return;
+            }
+            
+            const filteredCandidates = allCandidates.filter(candidate => 
+                candidate.name.toLowerCase().includes(searchTerm) || 
+                candidate.project.toLowerCase().includes(searchTerm)
+            );
+            
+            await renderCandidates(filteredCandidates);
+            
+            // Re-apply selections to filtered results
+            window.selectedCandidates.forEach(selected => {
+                const card = document.querySelector(`[data-id="${selected.id}"]`);
+                if (card) {
+                    card.classList.add('selected');
+                }
+            });
+        }
+
+        // Toggle candidate selection
+        async function toggleCandidate(candidateId) {
+            const card = document.querySelector(`[data-id="${candidateId}"]`);
+            const candidates = await loadCandidates();
+            const candidate = candidates.find(c => c.id === candidateId);
+
+            if (window.selectedCandidates.find(c => c.id === candidateId)) {
+                // Deselect
+                window.selectedCandidates = window.selectedCandidates.filter(c => c.id !== candidateId);
+                card.classList.remove('selected');
+            } else {
+                // Check if we've reached the limit
+                if (window.selectedCandidates.length >= 10) {
+                    alert('You can select up to 10 team members only.');
+                    return;
+                }
+
+                // Select
+                window.selectedCandidates.push(candidate);
+                card.classList.add('selected');
+            }
+
+            updateSelectionInfo();
+        }
+
+        // Update selection information display
+        function updateSelectionInfo() {
+            const infoDiv = document.getElementById('selection-info');
+            const countSpan = document.getElementById('selected-count');
+
+            if (window.selectedCandidates.length > 0) {
+                countSpan.textContent = window.selectedCandidates.length;
+                infoDiv.style.display = 'block';
+            } else {
+                infoDiv.style.display = 'none';
+            }
+
+            // Update submit button state
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = window.selectedCandidates.length === 0;
+        }
+
+        // Submit vote to Supabase
+        async function submitVoteToSupabase(firstName, lastName, email) {
+            if (!supabase) {
+                alert('Supabase is not configured. Please set up Supabase credentials.');
+                return false;
+            }
+
+            try {
+                // First, check how many votes this user has already cast
+                const { data: existingVotes, error: fetchError } = await supabase
+                    .from('votes')
+                    .select('*')
+                    .eq('voter_email', email);
+
+                if (fetchError) {
+                    console.error('Error checking existing votes:', fetchError);
+                    alert('Error checking vote history. Please try again.');
+                    return false;
+                }
+
+                // Check 1: Has the user already voted 10 times?
+                if (existingVotes.length >= 10) {
+                    alert('You have reached the maximum limit of 10 votes. Thank you for your participation!');
+                    return false;
+                }
+
+                // Check 2: Is the user trying to vote for someone they've already voted for?
+                const voterName = `${firstName} ${lastName}`;
+                const votesToSubmit = [];
+                
+                for (const candidate of window.selectedCandidates) {
+                    // Check if user has already voted for this candidate
+                    const alreadyVotedForCandidate = existingVotes.some(vote => 
+                        vote.candidate_id === candidate.id);
+                    
+                    if (alreadyVotedForCandidate) {
+                        alert(`You have already voted for ${candidate.name}. You cannot vote for the same person twice.`);
+                        return false;
+                    }
+                    
+                    // Add this vote to the list to submit
+                    votesToSubmit.push({
+                        voter_name: voterName,
+                        voter_email: email,
+                        candidate_id: candidate.id,
+                        candidate_name: candidate.name,
+                        candidate_project: candidate.project,
+                        vote_timestamp: new Date().toISOString()
+                    });
+                }
+
+                // Check 3: Would submitting these votes exceed the 10-vote limit?
+                if (existingVotes.length + votesToSubmit.length > 10) {
+                    const remainingVotes = 10 - existingVotes.length;
+                    alert(`You can only cast ${remainingVotes} more vote(s). Please deselect some candidates.`);
+                    return false;
+                }
+
+                // Insert all votes
+                const { data, error } = await supabase
+                    .from('votes')
+                    .insert(votesToSubmit);
+
+                if (error) {
+                    console.error('Error submitting votes to Supabase:', error);
+                    // Check for RLS/permission errors
+                    if (error.message && 
+                        (error.message.includes('permission') || 
+                         error.message.includes('denied') ||
+                         error.message.includes('row-level security') ||
+                         error.message.includes('42501'))) {
+                        alert('Permission denied when submitting votes. Please check Row Level Security (RLS) policies in Supabase.');
+                    } else {
+                        alert('Error submitting votes. Please try again. Error: ' + (error.message || 'Unknown error'));
+                    }
+                    return false;
+                }
+
+                console.log(`Successfully submitted ${votesToSubmit.length} votes to Supabase`);
+                return true;
+            } catch (error) {
+                console.error('Error submitting votes:', error);
+                alert('Error submitting votes. Please try again.');
+                return false;
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('voting-form').addEventListener('submit', async function(e) {
+            e.preventDefault(); // Prevent default form submission
+            
+            const firstName = document.getElementById('first-name').value;
+            const lastName = document.getElementById('last-name').value;
+            const email = document.getElementById('email').value;
+            const submitBtn = document.getElementById('submit-btn');
+
+            if (window.selectedCandidates.length === 0) {
+                alert('Please select at least one team member to award Impact Tokens.');
+                return;
+            }
+
+            // Update button to show submission is happening
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            // Submit vote to Supabase
+            const success = await submitVoteToSupabase(firstName, lastName, email);
+
+            if (success) {
+                // Show success message
+                alert(`Thank you ${firstName} ${lastName}! You've successfully awarded Impact Tokens to ${window.selectedCandidates.length} team member(s).`);
+                
+                // Store a flag in localStorage to indicate successful submission
+                localStorage.setItem('formSubmitted', 'true');
+                
+                // Update localStorage for leaderboard (this won't affect Supabase form submission)
+                const existingVotes = JSON.parse(localStorage.getItem('votes') || '[]');
+                const existingVoters = JSON.parse(localStorage.getItem('voters') || '[]');
+                
+                window.selectedCandidates.forEach(candidate => {
+                    const vote = {
+                        id: Date.now().toString() + Math.random(),
+                        voterName: `${firstName} ${lastName}`,
+                        voterEmail: email,
+                        participantId: candidate.id.toString(),
+                        participantName: candidate.name,
+                        timestamp: new Date().toISOString(),
+                        valid: true
+                    };
+
+                    const voter = {
+                        name: `${firstName} ${lastName}`,
+                        email: email,
+                        participantId: candidate.id.toString(),
+                        timestamp: vote.timestamp
+                    };
+
+                    existingVotes.push(vote);
+                    existingVoters.push(voter);
+                });
+
+                localStorage.setItem('votes', JSON.stringify(existingVotes));
+                localStorage.setItem('voters', JSON.stringify(existingVoters));
+
+                // Dispatch event for real-time updates
+                window.dispatchEvent(new Event('votesUpdated'));
+                
+                // Redirect to leaderboard after a delay
+                setTimeout(() => {
+                    window.location.href = 'leaderboard.html';
+                }, 2000); // 2 second delay as per requirements
+            } else {
+                // Re-enable submit button if submission failed
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Give Impact Token';
+            }
+        });
+
+        // Initialize when page loads
+        window.onload = async function() {
+            await init();
+        };
+    </script>
+</body>
+</html>
