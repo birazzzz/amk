@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - Impact Token (IT) Voting</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        :root {
+            /* Design Guidelines Color Palette */
+            --bg: #edeae7;
+            --card: #ffffff;
+            --border: #dedede;
+            --hover: #81EDFF;
+            --text: #222222;
+            --text2: #666666;
+            --accent: #81EDFF;
+            --xs: 4px;
+            --sm: 8px;
+            --md: 16px;
+            --lg: 24px;
+            --xl: 32px;
+            --xxl: 40px;
+            --r-sm: 8px;
+            --r-md: 12px;
+            --r-lg: 16px;
+            --r-xl: 24px;
+            --r-pill: 999px;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,.1);
+            --shadow-md: 0 4px 12px rgba(0,0,0,.1);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,.1);
+            --fast: .2s ease;
+            --med: .3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--md);
+        }
+
+        .container {
+            background: var(--card);
+            border-radius: var(--r-xl);
+            box-shadow: var(--shadow-lg);
+            padding: var(--xxl);
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: var(--xxl);
+        }
+
+        .title {
+            color: var(--text);
+            font-weight: 700;
+            font-size: 2.2rem;
+            margin-bottom: var(--sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--sm);
+        }
+
+        .subtitle {
+            color: var(--text2);
+            font-size: 1.1rem;
+            margin-bottom: var(--xl);
+        }
+
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--xs);
+            background: #e8f5e8;
+            color: #28a745;
+            padding: var(--xs) var(--sm);
+            border-radius: var(--r-pill);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: var(--md);
+        }
+
+        .leaderboard {
+            margin-bottom: var(--xl);
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            background: var(--card);
+            border-radius: var(--r-lg);
+            padding: var(--lg);
+            margin-bottom: var(--md);
+            box-shadow: var(--shadow-sm);
+            border: 2px solid var(--border);
+            transition: var(--fast);
+        }
+
+        .leaderboard-item:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .rank {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-right: var(--lg);
+            flex-shrink: 0;
+        }
+
+        .rank-1 {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #8B4513;
+        }
+
+        .rank-2 {
+            background: linear-gradient(135deg, #C0C0C0, #A8A8A8);
+            color: #2F4F4F;
+        }
+
+        .rank-3 {
+            background: linear-gradient(135deg, #CD7F32, #B87333);
+            color: #8B4513;
+        }
+
+        .rank-other {
+            background: var(--accent);
+            color: var(--text);
+        }
+
+        .participant-info {
+            flex: 1;
+        }
+
+        .participant-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: var(--xs);
+        }
+
+        .participant-project {
+            color: var(--text2);
+            font-size: 0.95rem;
+            margin-bottom: var(--sm);
+        }
+
+        .participant-description {
+            color: var(--text2);
+            font-size: 0.85rem;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-clamp: 2;
+        }
+
+        .token-count {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-width: 100px;
+            flex-shrink: 0;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--md);
+                max-width: 100%;
+                margin: var(--sm);
+            }
+
+            .title {
+                font-size: 1.8rem;
+            }
+
+            .leaderboard-item {
+                padding: var(--md);
+            }
+
+            .rank {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+                margin-right: var(--md);
+            }
+
+            .token-number {
+                font-size: 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 1.6rem;
+            }
+
+            .leaderboard-item {
+                flex-direction: column;
+                text-align: center;
+                gap: var(--md);
+            }
+
+            .rank {
+                margin-right: 0;
+                margin-bottom: var(--sm);
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="live-indicator" id="data-status">
+                <span style="width: 8px; height: 8px; background: #28a745; border-radius: 50%; display: inline-block;"></span>
+                <span id="status-text">GLOBAL DATA</span>
+            </div>
+            <h1 class="title">
+                🏆 Impact Token Leaderboard
+            </h1>
+            <p class="subtitle" id="subtitle-text">Real-time rankings of team members by Impact Tokens received <span style="color: #28a745; font-weight: 600;">(Global data)</span></p>
+        </div>
+
+        <div class="leaderboard" id="leaderboard">
+            <!-- Leaderboard items will be populated by JavaScript -->
+        </div>
+
+        <!-- Vote Another Token button removed -->
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0"></script>
+    <script>
+        // Initialize Supabase with your provided credentials
+        const SUPABASE_URL = 'https://ssrxybgexgntfdvkusyw.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzcnh5YmdleGdudGZkdmt1c3l3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk5NzYwMDEsImV4cCI6MjA3NTU1MjAwMX0._4WQ4uUE9ALjtZPSG11nouFA3MBftPgeCOf1trhoFlk';
+        
+        // Initialize Supabase client
+        let supabase;
+        try {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('Supabase client initialized successfully');
+        } catch (error) {
+            console.error('Error initializing Supabase client:', error);
+            supabase = null;
+        }
+        
+        // Load candidates from Supabase or use empty array
+        const defaultCandidates = [];
+
+        // Load candidates from Supabase
+        async function loadCandidates() {
+            if (!supabase) {
+                console.error('Supabase client not initialized');
+                return defaultCandidates;
+            }
+            
+            try {
+                const { data, error } = await supabase
+                    .from('candidates')
+                    .select('*')
+                    .order('name', { ascending: true });
+                
+                if (error) {
+                    console.error('Error fetching candidates from Supabase:', error);
+                    // More specific error handling
+                    if (error.message) {
+                        console.error('Error message:', error.message);
+                        // Check for table not found
+                        if (error.message.includes('candidates') && 
+                            (error.message.includes('not found') || 
+                             error.message.includes('does not exist') ||
+                             error.message.includes('relation') ||
+                             error.message.includes('undefined_table'))) {
+                            console.error('Candidates table not found in Supabase. Please create the table first.');
+                        }
+                        // Check for RLS/permission errors
+                        else if (error.message.includes('permission') || 
+                                 error.message.includes('denied') ||
+                                 error.message.includes('row-level security') ||
+                                 error.message.includes('42501')) {
+                            console.error('Permission denied. Please check Row Level Security (RLS) policies in Supabase.');
+                        }
+                        else {
+                            console.error('Error fetching candidates: ' + error.message);
+                        }
+                    }
+                    return defaultCandidates;
+                }
+                
+                return data || defaultCandidates;
+            } catch (err) {
+                console.error('Error loading candidates from Supabase:', err);
+                return defaultCandidates;
+            }
+        }
+
+        // Load votes from localStorage
+        function loadVotes() {
+            return JSON.parse(localStorage.getItem('votes') || '[]');
+        }
+
+        // Load votes from Supabase
+        async function loadVotesFromSupabase() {
+            // Always use Supabase since we have hardcoded credentials
+            if (!supabase) {
+                console.error('Supabase client not initialized');
+                // Even if there was an initialization error, we still want to return empty data
+                // rather than falling back to localStorage
+                return { votes: [], isGlobal: true };
+            }
+
+            try {
+                console.log('Fetching votes from Supabase...');
+                const { data, error } = await supabase
+                    .from('votes')
+                    .select('*')
+                    .order('vote_timestamp', { ascending: false });
+
+                if (error) {
+                    console.error('Error fetching votes from Supabase:', error);
+                    // Check for table not found
+                    if (error.message && 
+                        error.message.includes('votes') && 
+                        (error.message.includes('not found') || 
+                         error.message.includes('does not exist') ||
+                         error.message.includes('relation') ||
+                         error.message.includes('undefined_table'))) {
+                        console.error('Votes table not found in Supabase. Please create the table first.');
+                    }
+                    // Check for RLS/permission errors
+                    else if (error.message && 
+                             (error.message.includes('permission') || 
+                              error.message.includes('denied') ||
+                              error.message.includes('row-level security') ||
+                              error.message.includes('42501'))) {
+                        console.error('Permission denied. Please check Row Level Security (RLS) policies in Supabase.');
+                    }
+                    else {
+                        console.error('Error fetching votes: ' + (error.message || 'Unknown error'));
+                    }
+                    // Return empty data but still indicate it's global data
+                    return { votes: [], isGlobal: true };
+                }
+
+                console.log(`Successfully fetched ${data.length} votes from Supabase`);
+                
+                // Convert Supabase data to the format expected by the leaderboard
+                const votes = data.map(vote => ({
+                    id: vote.id || Date.now().toString() + Math.random(),
+                    voterName: vote.voter_name,
+                    voterEmail: vote.voter_email,
+                    participantId: vote.candidate_id?.toString(),
+                    participantName: vote.candidate_name,
+                    timestamp: vote.vote_timestamp,
+                    valid: true
+                }));
+                
+                return { votes, isGlobal: true };
+            } catch (err) {
+                console.error('Error loading votes from Supabase:', err);
+                // Return empty data but still indicate it's global data
+                return { votes: [], isGlobal: true };
+            }
+        }
+
+        // Calculate leaderboard data
+        async function calculateLeaderboard() {
+            const { votes, isGlobal } = await loadVotesFromSupabase();
+            const candidates = await loadCandidates();
+
+            // Update UI to show data source (always global now)
+            const statusText = document.getElementById('status-text');
+            const subtitleText = document.getElementById('subtitle-text');
+            
+            statusText.textContent = 'GLOBAL DATA';
+            statusText.style.color = '#28a745';
+            subtitleText.innerHTML = 'Real-time rankings of team members by Impact Tokens received <span style="color: #28a745; font-weight: 600;">(Global data)</span>';
+
+            // Debug: Log the votes data
+            console.log('Loaded votes:', votes);
+
+            // Calculate totals for each candidate
+            const totals = {};
+            candidates.forEach(candidate => {
+                const candidateVotes = votes.filter(vote =>
+                    vote.participantId === candidate.id.toString() && vote.valid === true
+                );
+                totals[candidate.id] = {
+                    ...candidate,
+                    totalVotes: candidateVotes.length,
+                    recentVoters: candidateVotes.slice(-3) // Last 3 voters
+                };
+
+                // Debug: Log candidate votes
+                console.log(`Candidate ${candidate.name} (ID: ${candidate.id}) has ${candidateVotes.length} votes`);
+            });
+
+            // Sort by total votes (descending)
+            const sortedCandidates = candidates
+                .map(candidate => ({ ...candidate, totalVotes: totals[candidate.id]?.totalVotes || 0 }))
+                .sort((a, b) => b.totalVotes - a.totalVotes);
+
+            return {
+                candidates: sortedCandidates,
+                totalVotes: votes.length,
+                totalParticipants: candidates.length,
+                averageTokens: candidates.length > 0 ? (votes.length / candidates.length).toFixed(1) : 0
+            };
+        }
+
+        // Render leaderboard
+        async function renderLeaderboard() {
+            const data = await calculateLeaderboard();
+            const leaderboardDiv = document.getElementById('leaderboard');
+
+            // Render leaderboard items
+            leaderboardDiv.innerHTML = data.candidates.map((candidate, index) => {
+                const rank = index + 1;
+                const rankClass = rank <= 3 ? `rank-${rank}` : 'rank-other';
+
+                return `
+                    <div class="leaderboard-item">
+                        <div class="rank ${rankClass}">${rank}</div>
+                        <div class="participant-info">
+                            <div class="participant-name">${candidate.name}</div>
+                            <div class="participant-project">${candidate.project}</div>
+                        </div>
+                        <div class="token-count">
+                            <div class="token-number">${candidate.totalVotes}</div>
+                            <div class="token-label">IT</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Listen for storage changes (real-time updates when votes are cast)
+        function listenForVoteUpdates() {
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'votes' || e.key === 'voters') {
+                    console.log('Storage event detected, updating leaderboard');
+                    renderLeaderboard();
+                }
+            });
+
+            // Also listen for our own localStorage changes (when set in the same window)
+            window.addEventListener('votesUpdated', function(e) {
+                console.log('Custom votesUpdated event detected');
+                renderLeaderboard();
+            });
+            
+            // Listen for Supabase real-time updates (if Supabase is available)
+            if (supabase) {
+                try {
+                    const subscription = supabase
+                        .channel('votes-changes')
+                        .on(
+                            'postgres_changes',
+                            {
+                                event: 'INSERT',
+                                schema: 'public',
+                                table: 'votes',
+                            },
+                            (payload) => {
+                                console.log('New vote detected from Supabase:', payload);
+                                renderLeaderboard();
+                            }
+                        )
+                        .subscribe();
+                } catch (err) {
+                    console.error('Error setting up Supabase real-time subscription:', err);
+                }
+            }
+        }
+
+        // Auto-refresh leaderboard every 5 seconds for real-time updates
+        async function startAutoRefresh() {
+            await renderLeaderboard();
+            listenForVoteUpdates();
+            setInterval(renderLeaderboard, 5000);
+            // No need to check Supabase setup since we're using hardcoded credentials
+        }
+
+        // Initialize when page loads
+        window.onload = startAutoRefresh;
+    </script>
+</body>
+</html>
