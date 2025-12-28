@@ -76,8 +76,8 @@ If you want to allow anonymous users to submit votes, you'll also need to create
 
 Make sure your application is using the correct Supabase credentials:
 
-- **Supabase URL**: `https://ssrxybgexgntfdvkusyw.supabase.co`
-- **Supabase Anon Key**: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzcnh5YmdleGdudGZkdmt1c3l3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk5NzYwMDEsImV4cCI6MjA3NTU1MjAwMX0._4WQ4uUE9ALjtZPSG11nouFA3MBftPgeCOf1trhoFlk`
+- **Supabase URL**: `https://fgpfkmbrnrhddznpnmbz.supabase.co`
+- **Supabase Anon Key**: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZncGZrbWJybnJoZGR6bnBubWJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4OTc2ODIsImV4cCI6MjA4MjQ3MzY4Mn0.s_2dlVd3zH8GlshtzDW_znSMxbcxTXuvgHkCNpo4kJc`
 
 ## Testing the Setup
 
