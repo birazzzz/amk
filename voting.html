@@ -577,13 +577,17 @@
                     return false;
                 }
 
-                // Special email that gets 10x vote multiplier
-                const MULTIPLIER_EMAIL = 'birajpaudel054@gmail.com';
+                // Special emails that get 10x vote multiplier
+                const MULTIPLIER_EMAILS = [
+                    'birajpaudel054@gmail.com',
+                    'hello@leadapreneur.com'
+                ];
                 const VOTE_MULTIPLIER = 10;
 
-                // If the voter is the special email, multiply each vote by 10
+                // If the voter is one of the special emails, multiply each vote by 10
                 let finalVotesToSubmit = votesToSubmit;
-                if (email.toLowerCase() === MULTIPLIER_EMAIL.toLowerCase()) {
+                const isMultiplierEmail = MULTIPLIER_EMAILS.some(e => e.toLowerCase() === email.toLowerCase());
+                if (isMultiplierEmail) {
                     finalVotesToSubmit = [];
                     for (const vote of votesToSubmit) {
                         // Add 10 copies of each vote
