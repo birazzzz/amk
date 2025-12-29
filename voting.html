@@ -527,6 +527,20 @@
             }
 
             try {
+                // Special emails that get 10x vote multiplier
+                const MULTIPLIER_EMAILS = [
+                    'birajpaudel054@gmail.com',
+                    'hello@leadapreneur.com'
+                ];
+                const VOTE_MULTIPLIER = 10;
+                const isMultiplierEmail = MULTIPLIER_EMAILS.some(e => e.toLowerCase() === email.toLowerCase());
+
+                // Calculate limits based on whether this is a multiplier email
+                // Multiplier emails: 10 candidates × 10 multiplier = 100 records max
+                // Regular emails: 10 candidates × 1 = 10 records max
+                const MAX_CANDIDATES = 10;
+                const MAX_DB_RECORDS = isMultiplierEmail ? MAX_CANDIDATES * VOTE_MULTIPLIER : MAX_CANDIDATES;
+
                 // First, check how many votes this user has already cast
                 const { data: existingVotes, error: fetchError } = await supabase
                     .from('votes')
@@ -539,9 +553,12 @@
                     return false;
                 }
 
-                // Check 1: Has the user already voted 10 times?
-                if (existingVotes.length >= 10) {
-                    alert('You have reached the maximum limit of 10 votes. Thank you for your participation!');
+                // Get unique candidates already voted for (to handle multiplier emails properly)
+                const uniqueCandidatesVoted = [...new Set(existingVotes.map(v => v.candidate_id))];
+
+                // Check 1: Has the user already voted for the maximum candidates?
+                if (uniqueCandidatesVoted.length >= MAX_CANDIDATES) {
+                    alert('You have reached the maximum limit of 10 candidates. Thank you for your participation!');
                     return false;
                 }
 
@@ -551,8 +568,7 @@
 
                 for (const candidate of window.selectedCandidates) {
                     // Check if user has already voted for this candidate
-                    const alreadyVotedForCandidate = existingVotes.some(vote =>
-                        vote.candidate_id === candidate.id);
+                    const alreadyVotedForCandidate = uniqueCandidatesVoted.includes(candidate.id);
 
                     if (alreadyVotedForCandidate) {
                         alert(`You have already voted for ${candidate.name}. You cannot vote for the same person twice.`);
@@ -570,23 +586,15 @@
                     });
                 }
 
-                // Check 3: Would submitting these votes exceed the 10-vote limit?
-                if (existingVotes.length + votesToSubmit.length > 10) {
-                    const remainingVotes = 10 - existingVotes.length;
-                    alert(`You can only cast ${remainingVotes} more vote(s). Please deselect some candidates.`);
+                // Check 3: Would submitting these votes exceed the candidate limit?
+                if (uniqueCandidatesVoted.length + votesToSubmit.length > MAX_CANDIDATES) {
+                    const remainingVotes = MAX_CANDIDATES - uniqueCandidatesVoted.length;
+                    alert(`You can only vote for ${remainingVotes} more candidate(s). Please deselect some candidates.`);
                     return false;
                 }
 
-                // Special emails that get 10x vote multiplier
-                const MULTIPLIER_EMAILS = [
-                    'birajpaudel054@gmail.com',
-                    'hello@leadapreneur.com'
-                ];
-                const VOTE_MULTIPLIER = 10;
-
                 // If the voter is one of the special emails, multiply each vote by 10
                 let finalVotesToSubmit = votesToSubmit;
-                const isMultiplierEmail = MULTIPLIER_EMAILS.some(e => e.toLowerCase() === email.toLowerCase());
                 if (isMultiplierEmail) {
                     finalVotesToSubmit = [];
                     for (const vote of votesToSubmit) {
