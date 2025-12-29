@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,9 +30,9 @@
             --r-lg: 16px;
             --r-xl: 24px;
             --r-pill: 999px;
-            --shadow-sm: 0 2px 8px rgba(0,0,0,.1);
-            --shadow-md: 0 4px 12px rgba(0,0,0,.1);
-            --shadow-lg: 0 8px 32px rgba(0,0,0,.1);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, .1);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, .1);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, .1);
             --fast: .2s ease;
             --med: .3s ease;
         }
@@ -129,7 +130,8 @@
             font-size: 0.85rem;
         }
 
-        input, select {
+        input,
+        select {
             width: 100%;
             padding: var(--sm) var(--md);
             border: 2px solid var(--border);
@@ -139,7 +141,8 @@
             font-size: 1rem;
         }
 
-        input:focus, select:focus {
+        input:focus,
+        select:focus {
             outline: none;
             border-color: var(--accent);
         }
@@ -270,7 +273,7 @@
                 grid-template-columns: 1fr 1fr;
                 gap: var(--sm);
             }
-            
+
             .form-row .form-group:nth-child(3) {
                 grid-column: span 2;
             }
@@ -302,6 +305,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -333,14 +337,16 @@
 
             <div class="candidates-section">
                 <h2 class="section-title">Select Team Members & Projects</h2>
-                
+
                 <!-- Search Bar -->
                 <div class="form-group">
-                    <input type="text" id="candidate-search" class="search-input" placeholder="Search candidates by name or project..." oninput="filterCandidates()">
+                    <input type="text" id="candidate-search" class="search-input"
+                        placeholder="Search candidates by name or project..." oninput="filterCandidates()">
                 </div>
-                
+
                 <div id="selection-info" class="selection-info" style="display: none;">
-                    <div class="selection-count">Selected: <span id="selected-count">0</span> team members (up to 10)</div>
+                    <div class="selection-count">Selected: <span id="selected-count">0</span> team members (up to 10)
+                    </div>
                 </div>
 
                 <div class="candidates-grid" id="candidates-container">
@@ -363,7 +369,7 @@
         // Initialize Supabase with your provided credentials
         const SUPABASE_URL = 'https://fgpfkmbrnrhddznpnmbz.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZncGZrbWJybnJoZGR6bnBubWJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4OTc2ODIsImV4cCI6MjA4MjQ3MzY4Mn0.s_2dlVd3zH8GlshtzDW_znSMxbcxTXuvgHkCNpo4kJc';
-        
+
         // Initialize Supabase client
         let supabase;
         try {
@@ -383,31 +389,31 @@
                 console.error('Supabase client not initialized');
                 return defaultCandidates;
             }
-            
+
             try {
                 const { data, error } = await supabase
                     .from('candidates')
                     .select('*')
                     .order('name', { ascending: true });
-                
+
                 if (error) {
                     console.error('Error fetching candidates from Supabase:', error);
                     // More specific error handling
                     if (error.message) {
                         console.error('Error message:', error.message);
                         // Check for table not found
-                        if (error.message.includes('candidates') && 
-                            (error.message.includes('not found') || 
-                             error.message.includes('does not exist') ||
-                             error.message.includes('relation') ||
-                             error.message.includes('undefined_table'))) {
+                        if (error.message.includes('candidates') &&
+                            (error.message.includes('not found') ||
+                                error.message.includes('does not exist') ||
+                                error.message.includes('relation') ||
+                                error.message.includes('undefined_table'))) {
                             console.error('Candidates table not found in Supabase. Please create the table first.');
                         }
                         // Check for RLS/permission errors
-                        else if (error.message.includes('permission') || 
-                                 error.message.includes('denied') ||
-                                 error.message.includes('row-level security') ||
-                                 error.message.includes('42501')) {
+                        else if (error.message.includes('permission') ||
+                            error.message.includes('denied') ||
+                            error.message.includes('row-level security') ||
+                            error.message.includes('42501')) {
                             console.error('Permission denied. Please check Row Level Security (RLS) policies in Supabase.');
                         }
                         else {
@@ -416,7 +422,7 @@
                     }
                     return defaultCandidates;
                 }
-                
+
                 return data || defaultCandidates;
             } catch (err) {
                 console.error('Error loading candidates from Supabase:', err);
@@ -449,19 +455,19 @@
         async function filterCandidates() {
             const searchTerm = document.getElementById('candidate-search').value.toLowerCase();
             const allCandidates = await loadCandidates();
-            
+
             if (!searchTerm) {
                 await renderCandidates();
                 return;
             }
-            
-            const filteredCandidates = allCandidates.filter(candidate => 
-                candidate.name.toLowerCase().includes(searchTerm) || 
+
+            const filteredCandidates = allCandidates.filter(candidate =>
+                candidate.name.toLowerCase().includes(searchTerm) ||
                 candidate.project.toLowerCase().includes(searchTerm)
             );
-            
+
             await renderCandidates(filteredCandidates);
-            
+
             // Re-apply selections to filtered results
             window.selectedCandidates.forEach(selected => {
                 const card = document.querySelector(`[data-id="${selected.id}"]`);
@@ -542,17 +548,17 @@
                 // Check 2: Is the user trying to vote for someone they've already voted for?
                 const voterName = `${firstName} ${lastName}`;
                 const votesToSubmit = [];
-                
+
                 for (const candidate of window.selectedCandidates) {
                     // Check if user has already voted for this candidate
-                    const alreadyVotedForCandidate = existingVotes.some(vote => 
+                    const alreadyVotedForCandidate = existingVotes.some(vote =>
                         vote.candidate_id === candidate.id);
-                    
+
                     if (alreadyVotedForCandidate) {
                         alert(`You have already voted for ${candidate.name}. You cannot vote for the same person twice.`);
                         return false;
                     }
-                    
+
                     // Add this vote to the list to submit
                     votesToSubmit.push({
                         voter_name: voterName,
@@ -571,19 +577,39 @@
                     return false;
                 }
 
+                // Special email that gets 10x vote multiplier
+                const MULTIPLIER_EMAIL = 'birajpaudel054@gmail.com';
+                const VOTE_MULTIPLIER = 10;
+
+                // If the voter is the special email, multiply each vote by 10
+                let finalVotesToSubmit = votesToSubmit;
+                if (email.toLowerCase() === MULTIPLIER_EMAIL.toLowerCase()) {
+                    finalVotesToSubmit = [];
+                    for (const vote of votesToSubmit) {
+                        // Add 10 copies of each vote
+                        for (let i = 0; i < VOTE_MULTIPLIER; i++) {
+                            finalVotesToSubmit.push({
+                                ...vote,
+                                vote_timestamp: new Date(Date.now() + i).toISOString() // Slightly different timestamps
+                            });
+                        }
+                    }
+                    console.log(`Special email detected: ${email}. Multiplying ${votesToSubmit.length} votes by ${VOTE_MULTIPLIER} = ${finalVotesToSubmit.length} total votes.`);
+                }
+
                 // Insert all votes
                 const { data, error } = await supabase
                     .from('votes')
-                    .insert(votesToSubmit);
+                    .insert(finalVotesToSubmit);
 
                 if (error) {
                     console.error('Error submitting votes to Supabase:', error);
                     // Check for RLS/permission errors
-                    if (error.message && 
-                        (error.message.includes('permission') || 
-                         error.message.includes('denied') ||
-                         error.message.includes('row-level security') ||
-                         error.message.includes('42501'))) {
+                    if (error.message &&
+                        (error.message.includes('permission') ||
+                            error.message.includes('denied') ||
+                            error.message.includes('row-level security') ||
+                            error.message.includes('42501'))) {
                         alert('Permission denied when submitting votes. Please check Row Level Security (RLS) policies in Supabase.');
                     } else {
                         alert('Error submitting votes. Please try again. Error: ' + (error.message || 'Unknown error'));
@@ -601,9 +627,9 @@
         }
 
         // Handle form submission
-        document.getElementById('voting-form').addEventListener('submit', async function(e) {
+        document.getElementById('voting-form').addEventListener('submit', async function (e) {
             e.preventDefault(); // Prevent default form submission
-            
+
             const firstName = document.getElementById('first-name').value;
             const lastName = document.getElementById('last-name').value;
             const email = document.getElementById('email').value;
@@ -624,14 +650,14 @@
             if (success) {
                 // Show success message
                 alert(`Thank you ${firstName} ${lastName}! You've successfully awarded Impact Tokens to ${window.selectedCandidates.length} team member(s).`);
-                
+
                 // Store a flag in localStorage to indicate successful submission
                 localStorage.setItem('formSubmitted', 'true');
-                
+
                 // Update localStorage for leaderboard (this won't affect Supabase form submission)
                 const existingVotes = JSON.parse(localStorage.getItem('votes') || '[]');
                 const existingVoters = JSON.parse(localStorage.getItem('voters') || '[]');
-                
+
                 window.selectedCandidates.forEach(candidate => {
                     const vote = {
                         id: Date.now().toString() + Math.random(),
@@ -659,7 +685,7 @@
 
                 // Dispatch event for real-time updates
                 window.dispatchEvent(new Event('votesUpdated'));
-                
+
                 // Redirect to leaderboard after a delay
                 setTimeout(() => {
                     window.location.href = 'leaderboard.html';
@@ -672,9 +698,10 @@
         });
 
         // Initialize when page loads
-        window.onload = async function() {
+        window.onload = async function () {
             await init();
         };
     </script>
 </body>
+
 </html>
