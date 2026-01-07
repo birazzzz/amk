@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Impact Token Voting</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        :root {
+            /* Design Guidelines Color Palette */
+            --bg: #edeae7;
+            --card: #ffffff;
+            --border: #dedede;
+            --hover: #81EDFF;
+            --text: #222222;
+            --text2: #666666;
+            --accent: #81EDFF;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --xs: 4px;
+            --sm: 8px;
+            --md: 16px;
+            --lg: 24px;
+            --xl: 32px;
+            --xxl: 40px;
+            --r-sm: 8px;
+            --r-md: 12px;
+            --r-lg: 16px;
+            --r-xl: 24px;
+            --r-pill: 999px;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, .1);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, .1);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, .1);
+            --fast: .2s ease;
+            --med: .3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            padding: var(--md);
+        }
+
+        .container {
+            background: var(--card);
+            border-radius: var(--r-xl);
+            box-shadow: var(--shadow-lg);
+            padding: var(--xxl);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: var(--xxl);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: var(--xl);
+        }
+
+        .title {
+            color: var(--text);
+            font-weight: 700;
+            font-size: 2.2rem;
+            margin-bottom: var(--sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--sm);
+        }
+
+        .subtitle {
+            color: var(--text2);
+            font-size: 1rem;
+            margin-bottom: var(--md);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--md);
+            justify-content: center;
+            margin-top: var(--lg);
+        }
+
+        .nav-link {
+            background: var(--accent);
+            color: var(--text);
+            text-decoration: none;
+            padding: var(--sm) var(--md);
+            border-radius: var(--r-sm);
+            font-weight: 600;
+            transition: var(--fast);
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            border: 2px solid var(--border);
+            border-radius: var(--r-lg);
+            padding: var(--xl);
+            margin-bottom: var(--xl);
+        }
+
+        .form-section h2 {
+            color: var(--text);
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: var(--lg);
+            display: flex;
+            align-items: center;
+            gap: var(--sm);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--lg);
+            margin-bottom: var(--lg);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: var(--xs);
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: var(--sm) var(--md);
+            border: 2px solid var(--border);
+            border-radius: var(--r-sm);
+            font-family: 'Manrope', sans-serif;
+            font-size: 1rem;
+            transition: var(--fast);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: var(--md);
+            justify-content: flex-end;
+            margin-top: var(--lg);
+        }
+
+        .btn {
+            padding: var(--sm) var(--lg);
+            border: none;
+            border-radius: var(--r-sm);
+            cursor: pointer;
+            font-family: 'Manrope', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: var(--fast);
+            display: inline-flex;
+            align-items: center;
+            gap: var(--xs);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--text);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--text2);
+            color: var(--card);
+        }
+
+        .btn-secondary:hover {
+            background: var(--text);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .candidates-section {
+            margin-top: var(--xl);
+        }
+
+        .candidates-section h2 {
+            color: var(--text);
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: var(--lg);
+        }
+
+        .candidates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: var(--lg);
+            margin-bottom: var(--xl);
+        }
+
+        .candidate-card {
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: var(--r-lg);
+            padding: var(--lg);
+            transition: var(--fast);
+        }
+
+        .candidate-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .candidate-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--md);
+        }
+
+        .candidate-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: var(--xs);
+        }
+
+        .candidate-project {
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: var(--sm);
+        }
+
+        .candidate-description {
+            color: var(--text2);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: var(--md);
+        }
+
+        .candidate-id {
+            background: var(--accent);
+            color: var(--text);
+            padding: var(--xs) var(--sm);
+            border-radius: var(--r-sm);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .candidate-actions {
+            display: flex;
+            gap: var(--sm);
+            margin-top: var(--md);
+        }
+
+        .btn-small {
+            padding: var(--xs) var(--sm);
+            font-size: 0.9rem;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: var(--r-sm);
+            padding: var(--md);
+            margin-bottom: var(--lg);
+            display: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: var(--r-sm);
+            padding: var(--md);
+            margin-bottom: var(--lg);
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--md);
+                margin: var(--sm);
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .candidates-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0"></script>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">
+                ⚙️ Admin Panel
+            </h1>
+            <p class="subtitle">Manage Impact Token Voting Candidates</p>
+
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">🏠 Home</a>
+                <a href="voting.html" class="nav-link">🗳️ Voting</a>
+                <a href="leaderboard.html" class="nav-link">🏆 Leaderboard</a>
+                <a href="dashboard.html" class="nav-link">📊 Dashboard</a>
+            </div>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <strong>Success!</strong> <span id="successText"></span>
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            <strong>Error!</strong> <span id="errorText"></span>
+        </div>
+
+        <div class="form-section">
+            <h2>🔧 Database Setup</h2>
+            <p>If you see "table not found" errors, it's likely due to Row Level Security (RLS) configuration.</p>
+            <p><strong>Solution:</strong> Enable RLS on your tables and create policies with "true" as the expression.
+            </p>
+            <button class="btn btn-primary" onclick="createSupabaseTables()" style="margin-right: 10px;">🔧 Setup
+                Instructions</button>
+            <button class="btn btn-secondary" onclick="testSupabaseConnection()">✅ Test Connection</button>
+            <button class="btn btn-secondary" onclick="window.open('supabase-setup-guide.html', '_blank')"
+                style="margin-left: 10px;">📖 Setup Guide</button>
+        </div>
+
+        <div class="form-section">
+            <h2>➕ Add New Candidate</h2>
+
+            <form id="addCandidateForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="candidateName">Full Name *</label>
+                        <input type="text" id="candidateName" required placeholder="e.g., Sarah Chen">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="candidateProject">Project Name *</label>
+                        <input type="text" id="candidateProject" required
+                            placeholder="e.g., AI-Powered Analytics Dashboard">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="resetForm()">Clear</button>
+                    <button type="submit" class="btn btn-primary">Add Candidate</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="candidates-section">
+            <h2>👥 Current Candidates (<span id="candidateCount">0</span>)</h2>
+
+            <div class="candidates-grid" id="candidatesGrid">
+                <!-- Candidates will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Supabase with your provided credentials
+        // Using service role key for admin operations (more permissive)
+        const SUPABASE_URL = 'https://fgpfkmbrnrhddznpnmbz.supabase.co';
+        const SUPABASE_SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZncGZrbWJybnJoZGR6bnBubWJ6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2Njg5NzY4MiwiZXhwIjoyMDgyNDczNjgyfQ.REPLACE_WITH_SERVICE_ROLE_KEY'; // Replace with actual service role key if available
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZncGZrbWJybnJoZGR6bnBubWJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4OTc2ODIsImV4cCI6MjA4MjQ3MzY4Mn0.s_2dlVd3zH8GlshtzDW_znSMxbcxTXuvgHkCNpo4kJc';
+
+        // Initialize Supabase client with anon key for read operations
+        let supabase;
+        try {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('Supabase client initialized successfully');
+        } catch (error) {
+            console.error('Error initializing Supabase client:', error);
+            supabase = null;
+        }
+
+        // Default candidates data (empty for Supabase sync)
+        const defaultCandidates = [];
+
+        // Load candidates from Supabase
+        async function loadCandidates() {
+            if (!supabase) {
+                console.error('Supabase client not initialized');
+                return defaultCandidates;
+            }
+
+            try {
+                const { data, error } = await supabase
+                    .from('candidates')
+                    .select('*')
+                    .order('name', { ascending: true });
+
+                if (error) {
+                    console.error('Error fetching candidates from Supabase:', error);
+                    console.error('Full error details:', JSON.stringify(error, null, 2));
+                    // Check if it's a table not found error
+                    if (error.message) {
+                        console.error('Error message:', error.message);
+                        // More specific check for table not found
+                        if (error.message.includes('candidates') &&
+                            (error.message.includes('not found') ||
+                                error.message.includes('does not exist') ||
+                                error.message.includes('relation') ||
+                                error.message.includes('undefined_table'))) {
+                            showMessage('error', 'Candidates table not found in Supabase. Please create the table first.');
+                        }
+                        // Check for RLS/permission errors
+                        else if (error.message.includes('permission') ||
+                            error.message.includes('denied') ||
+                            error.message.includes('row-level security') ||
+                            error.message.includes('42501')) {
+                            showMessage('error', 'Permission denied. Please check Row Level Security (RLS) policies in Supabase for the candidates table.');
+                        }
+                        else {
+                            showMessage('error', 'Error fetching candidates: ' + error.message);
+                        }
+                    } else {
+                        showMessage('error', 'Unknown error fetching candidates from Supabase.');
+                    }
+                    return defaultCandidates;
+                }
+
+                return data || defaultCandidates;
+            } catch (err) {
+                console.error('Error loading candidates from Supabase:', err);
+                showMessage('error', 'Failed to load candidates from Supabase. Check console for details.');
+                return defaultCandidates;
+            }
+        }
+
+        // Save candidates to Supabase
+        async function saveCandidates(candidates) {
+            if (!supabase) {
+                console.error('Supabase client not initialized');
+                return false;
+            }
+
+            try {
+                // First, clear all existing candidates
+                const { error: deleteError } = await supabase
+                    .from('candidates')
+                    .delete()
+                    .neq('id', 0); // Delete all records
+
+                if (deleteError) {
+                    console.error('Error clearing candidates:', deleteError);
+                    console.error('Full error details:', JSON.stringify(deleteError, null, 2));
+                    // Check if it's a table not found error
+                    if (deleteError.message) {
+                        console.error('Error message:', deleteError.message);
+                        // More specific check for table not found
+                        if (deleteError.message.includes('candidates') &&
+                            (deleteError.message.includes('not found') ||
+                                deleteError.message.includes('does not exist') ||
+                                deleteError.message.includes('relation') ||
+                                deleteError.message.includes('undefined_table'))) {
+                            showMessage('error', 'Candidates table not found in Supabase. Please create the table first.');
+                        }
+                        // Check for RLS/permission errors
+                        else if (deleteError.message.includes('permission') ||
+                            deleteError.message.includes('denied') ||
+                            deleteError.message.includes('row-level security') ||
+                            deleteError.message.includes('42501')) {
+                            showMessage('error', 'Permission denied. Please check Row Level Security (RLS) policies in Supabase for the candidates table.');
+                        }
+                        else {
+                            showMessage('error', 'Error clearing candidates: ' + deleteError.message);
+                        }
+                    } else {
+                        showMessage('error', 'Unknown error clearing candidates from Supabase.');
+                    }
+                    return false;
+                }
+
+                // Then insert all candidates
+                if (candidates.length > 0) {
+                    const { error: insertError } = await supabase
+                        .from('candidates')
+                        .insert(candidates);
+
+                    if (insertError) {
+                        console.error('Error saving candidates:', insertError);
+                        console.error('Full error details:', JSON.stringify(insertError, null, 2));
+                        // Check if it's a table not found error
+                        if (insertError.message) {
+                            console.error('Error message:', insertError.message);
+                            // More specific check for table not found
+                            if (insertError.message.includes('candidates') &&
+                                (insertError.message.includes('not found') ||
+                                    insertError.message.includes('does not exist') ||
+                                    insertError.message.includes('relation') ||
+                                    insertError.message.includes('undefined_table'))) {
+                                showMessage('error', 'Candidates table not found in Supabase. Please create the table first.');
+                            }
+                            // Check for RLS/permission errors
+                            else if (insertError.message.includes('permission') ||
+                                insertError.message.includes('denied') ||
+                                insertError.message.includes('row-level security') ||
+                                insertError.message.includes('42501')) {
+                                showMessage('error', 'Permission denied. Please check Row Level Security (RLS) policies in Supabase for the candidates table.');
+                            }
+                            else {
+                                showMessage('error', 'Error saving candidates: ' + insertError.message);
+                            }
+                        } else {
+                            showMessage('error', 'Unknown error saving candidates to Supabase.');
+                        }
+                        return false;
+                    }
+                }
+
+                return true;
+            } catch (err) {
+                console.error('Error saving candidates to Supabase:', err);
+                showMessage('error', 'Error saving candidates to Supabase. Check console for details.');
+                return false;
+            }
+        }
+
+        // Show message
+        function showMessage(type, text) {
+            const messageEl = document.getElementById(type === 'success' ? 'successMessage' : 'errorMessage');
+            const textEl = document.getElementById(type === 'success' ? 'successText' : 'errorText');
+
+            textEl.textContent = text;
+            messageEl.style.display = 'block';
+
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 5000);
+        }
+
+        // Reset form
+        function resetForm() {
+            document.getElementById('addCandidateForm').reset();
+        }
+
+        // Show Supabase table creation instructions
+        function createSupabaseTables() {
+            const instructions = `
+To create the required tables in Supabase and configure them properly, please follow these steps:
+
+1. Go to your Supabase project dashboard
+2. Navigate to Table Editor
+3. Create a new table named "candidates" with these columns:
+   - id (int8, primary key, auto-increment)
+   - name (text)
+   - project (text)
+   - created_at (timestamptz, default: now())
+
+4. Create another table named "votes" with these columns:
+   - id (int8, primary key, auto-increment)
+   - voter_name (text)
+   - voter_email (text)
+   - candidate_id (int8)
+   - candidate_name (text)
+   - candidate_project (text)
+   - vote_timestamp (timestamptz, default: now())
+
+5. Enable Row Level Security (RLS) for both tables:
+   - Click on the "candidates" table
+   - Go to "Policies" tab
+   - Click "Enable RLS"
+   - Create a policy for SELECT (read access):
+     * Name: "Allow read access for everyone"
+     * Operation: SELECT
+     * USING expression: (true)
+   - Create a policy for INSERT (write access) if needed for admin operations
+
+6. For the "votes" table, also enable RLS and create a SELECT policy with USING expression: (true)
+
+7. After creating the tables and policies, refresh this page and try adding candidates.
+            `;
+
+            alert(instructions);
+
+            // Also show in the error message area
+            showMessage('error', 'Please create the required tables in Supabase and configure Row Level Security (RLS). Click "Create Supabase Tables" button for instructions.');
+        }
+
+        // Test Supabase connection and list tables
+        async function testSupabaseConnection() {
+            if (!supabase) {
+                showMessage('error', 'Supabase is not configured');
+                return;
+            }
+
+            try {
+                // Try to list tables
+                console.log('Testing Supabase connection...');
+
+                // Try a simple query to see what tables exist
+                const { data, error } = await supabase
+                    .from('candidates')
+                    .select('id')
+                    .limit(1);
+
+                if (error) {
+                    console.error('Connection test error:', error);
+                    console.error('Full error details:', JSON.stringify(error, null, 2));
+                    // More specific check for table not found
+                    if (error.message &&
+                        error.message.includes('candidates') &&
+                        (error.message.includes('not found') ||
+                            error.message.includes('does not exist') ||
+                            error.message.includes('relation') ||
+                            error.message.includes('undefined_table'))) {
+                        showMessage('error', 'Candidates table not found in Supabase. Please create the table first.');
+                    }
+                    // Check for RLS/permission errors
+                    else if (error.message &&
+                        (error.message.includes('permission') ||
+                            error.message.includes('denied') ||
+                            error.message.includes('row-level security') ||
+                            error.message.includes('42501'))) {
+                        showMessage('error', 'Permission denied. Please check Row Level Security (RLS) policies in Supabase for the candidates table.');
+                    }
+                    else {
+                        showMessage('error', 'Connection test failed: ' + (error.message || 'Unknown error'));
+                    }
+                } else {
+                    console.log('Connection test successful. Found candidates table.');
+                    showMessage('success', 'Connection test successful! Candidates table is accessible.');
+                }
+            } catch (err) {
+                console.error('Connection test failed:', err);
+                showMessage('error', 'Connection test failed. Check console for details.');
+            }
+        }
+
+        // Add new candidate
+        async function addCandidate(candidate) {
+            const candidates = await loadCandidates();
+
+            // Validate input
+            if (!candidate.name || !candidate.project) {
+                showMessage('error', 'Please fill in all fields');
+                return false;
+            }
+
+            // Check for duplicate
+            const exists = candidates.some(c =>
+                c.name.toLowerCase() === candidate.name.toLowerCase() &&
+                c.project.toLowerCase() === candidate.project.toLowerCase()
+            );
+
+            if (exists) {
+                showMessage('error', 'A candidate with this name and project already exists');
+                return false;
+            }
+
+            const newCandidate = {
+                name: candidate.name.trim(),
+                project: candidate.project.trim(),
+                created_at: new Date().toISOString()
+            };
+
+            // Add to Supabase
+            if (!supabase) {
+                showMessage('error', 'Supabase is not configured');
+                return false;
+            }
+
+            try {
+                const { data, error } = await supabase
+                    .from('candidates')
+                    .insert([newCandidate])
+                    .select();
+
+                if (error) {
+                    console.error('Error adding candidate:', error);
+                    console.error('Full error details:', JSON.stringify(error, null, 2));
+                    // Check if it's a table not found error
+                    if (error.message) {
+                        console.error('Error message:', error.message);
+                        // More specific check for table not found
+                        if (error.message.includes('candidates') &&
+                            (error.message.includes('not found') ||
+                                error.message.includes('does not exist') ||
+                                error.message.includes('relation') ||
+                                error.message.includes('undefined_table'))) {
+                            showMessage('error', 'Candidates table not found in Supabase. Please create the table first.');
+                        }
+                        // Check for RLS/permission errors
+                        else if (error.message.includes('permission') ||
+                            error.message.includes('denied') ||
+                            error.message.includes('row-level security') ||
+                            error.message.includes('42501')) {
+                            showMessage('error', 'Permission denied. Please check Row Level Security (RLS) policies in Supabase for the candidates table.');
+                        }
+                        else {
+                            showMessage('error', 'Error adding candidate: ' + error.message);
+                        }
+                    } else {
+                        showMessage('error', 'Unknown error adding candidate to Supabase.');
+                    }
+                    return false;
+                }
+
+                showMessage('success', `Added "${candidate.name}" successfully!`);
+                await renderCandidates();
+                resetForm();
+                return true;
+            } catch (err) {
+                console.error('Error adding candidate:', err);
+                showMessage('error', 'Error adding candidate. Check console for details.');
+                return false;
+            }
+        }
+
+        // Remove candidate
+        async function removeCandidate(id) {
+            if (!confirm('Are you sure you want to remove this candidate? This action cannot be undone.')) {
+                return;
+            }
+
+            // Remove from Supabase
+            if (!supabase) {
+                showMessage('error', 'Supabase is not configured');
+                return;
+            }
+
+            try {
+                const { error } = await supabase
+                    .from('candidates')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) {
+                    console.error('Error removing candidate:', error);
+                    console.error('Full error details:', JSON.stringify(error, null, 2));
+                    // Check if it's a table not found error
+                    if (error.message) {
+                        console.error('Error message:', error.message);
+                        // More specific check for table not found
+                        if (error.message.includes('candidates') &&
+                            (error.message.includes('not found') ||
+                                error.message.includes('does not exist') ||
+                                error.message.includes('relation') ||
+                                error.message.includes('undefined_table'))) {
+                            showMessage('error', 'Candidates table not found in Supabase. Please create the table first.');
+                        }
+                        // Check for RLS/permission errors
+                        else if (error.message.includes('permission') ||
+                            error.message.includes('denied') ||
+                            error.message.includes('row-level security') ||
+                            error.message.includes('42501')) {
+                            showMessage('error', 'Permission denied. Please check Row Level Security (RLS) policies in Supabase for the candidates table.');
+                        }
+                        else {
+                            showMessage('error', 'Error removing candidate: ' + error.message);
+                        }
+                    } else {
+                        showMessage('error', 'Unknown error removing candidate from Supabase.');
+                    }
+                    return;
+                }
+
+                showMessage('success', 'Candidate removed successfully!');
+                await renderCandidates();
+            } catch (err) {
+                console.error('Error removing candidate:', err);
+                showMessage('error', 'Error removing candidate. Check console for details.');
+            }
+        }
+
+        // Render candidates
+        async function renderCandidates() {
+            const candidates = await loadCandidates();
+            const container = document.getElementById('candidatesGrid');
+
+            // Update the count display
+            document.getElementById('candidateCount').textContent = candidates.length;
+
+            if (candidates.length === 0) {
+                container.innerHTML = '<p class="no-candidates">No candidates added yet. Add your first candidate using the form above.</p>';
+                return;
+            }
+
+            container.innerHTML = candidates.map(candidate => `
+                <div class="candidate-card">
+                    <div class="candidate-header">
+                        <div>
+                            <div class="candidate-name">${candidate.name}</div>
+                            <div class="candidate-project">${candidate.project}</div>
+                        </div>
+                        <div class="candidate-id">ID: ${candidate.id}</div>
+                    </div>
+                    <div class="candidate-description">
+                        Added: ${new Date(candidate.created_at || new Date()).toLocaleDateString()}
+                    </div>
+                    <div class="candidate-actions">
+                        <button class="btn btn-danger btn-small" onclick="removeCandidate(${candidate.id})" title="Remove candidate">
+                            🗑️ Remove
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Form submission
+        document.getElementById('addCandidateForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const nameInput = document.getElementById('candidateName');
+            const projectInput = document.getElementById('candidateProject');
+
+            const candidate = {
+                name: nameInput.value.trim(),
+                project: projectInput.value.trim()
+            };
+
+            if (await addCandidate(candidate)) {
+                // Reset form on success
+                this.reset();
+                // Set focus back to name field for better UX
+                nameInput.focus();
+            }
+        });
+
+        // Initialize
+        async function init() {
+            await renderCandidates();
+
+            // Set focus to the name field for better UX
+            document.getElementById('candidateName').focus();
+        }
+
+        // Initialize when page loads
+        window.onload = async function () {
+            await init();
+        };
+    </script>
+</body>
+
+</html>

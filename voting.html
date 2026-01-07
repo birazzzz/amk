@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting - Impact Token (IT) Voting</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        :root {
+            --bg: #edeae7;
+            --card: #ffffff;
+            --border: #dedede;
+            --hover: #81EDFF;
+            --text: #222222;
+            --text2: #666666;
+            --accent: #81EDFF;
+            --accent-dark: #5bc4d4;
+            --accent-glow: rgba(129, 237, 255, 0.5);
+            --accent-light: rgba(129, 237, 255, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Aurora Background */
+        .aurora {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .aurora::before,
+        .aurora::after {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(ellipse, rgba(129, 237, 255, 0.12) 0%, transparent 70%);
+        }
+
+        .aurora::before {
+            top: -60%;
+            left: -25%;
+            animation: aurora1 15s ease-in-out infinite;
+        }
+
+        .aurora::after {
+            bottom: -60%;
+            right: -25%;
+            animation: aurora2 18s ease-in-out infinite;
+        }
+
+        @keyframes aurora1 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: translate(3%, 3%) rotate(3deg);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes aurora2 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: translate(-3%, -3%) rotate(-3deg);
+                opacity: 0.7;
+            }
+        }
+
+        /* Floating Orbs */
+        .orbs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(50px);
+            animation: orbFloat 25s ease-in-out infinite;
+        }
+
+        .orb:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(129, 237, 255, 0.2), transparent 70%);
+            top: -15%;
+            right: -15%;
+        }
+
+        .orb:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(129, 237, 255, 0.15), transparent 70%);
+            bottom: -10%;
+            left: -10%;
+            animation-delay: -8s;
+        }
+
+        @keyframes orbFloat {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(30px, -30px);
+            }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-radius: 32px;
+            box-shadow:
+                0 30px 80px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.8),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            padding: 48px;
+            max-width: 950px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            animation: containerEnter 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        @keyframes containerEnter {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .title {
+            color: var(--text);
+            font-weight: 800;
+            font-size: 2rem;
+            margin-bottom: 8px;
+            text-align: center;
+            animation: fadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+            letter-spacing: -0.5px;
+        }
+
+        @keyframes fadeSlideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .subtitle {
+            color: var(--text2);
+            font-size: 1rem;
+            margin-bottom: 36px;
+            text-align: center;
+            animation: fadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        /* Section styling */
+        .form-section {
+            margin-bottom: 36px;
+            animation: fadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 24px;
+            color: var(--text);
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .section-header::before,
+        .section-header::after {
+            content: '';
+            height: 2px;
+            width: 60px;
+            background: linear-gradient(90deg, transparent, var(--accent));
+            border-radius: 2px;
+        }
+
+        .section-header::after {
+            background: linear-gradient(90deg, var(--accent), transparent);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.85rem;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid transparent;
+            border-radius: 16px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06), inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: var(--card);
+            box-shadow:
+                0 8px 30px rgba(129, 237, 255, 0.2),
+                0 0 0 4px var(--accent-light);
+            transform: translateY(-2px);
+        }
+
+        input::placeholder {
+            color: #aaa;
+        }
+
+        /* Candidates Section */
+        .candidates-section {
+            margin: 40px 0;
+            animation: fadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.25s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .section-title {
+            color: var(--text);
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 24px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .section-title::before,
+        .section-title::after {
+            content: '';
+            height: 2px;
+            width: 60px;
+            background: linear-gradient(90deg, transparent, var(--accent));
+            border-radius: 2px;
+        }
+
+        .section-title::after {
+            background: linear-gradient(90deg, var(--accent), transparent);
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .search-input {
+            padding-left: 52px !important;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            pointer-events: none;
+        }
+
+        .candidates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .candidate-card {
+            border: 2px solid transparent;
+            border-radius: 20px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            background: rgba(255, 255, 255, 0.9);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            animation: cardEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        }
+
+        @keyframes cardEnter {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+        }
+
+        .candidate-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent-light), transparent 60%);
+            opacity: 0;
+            transition: 0.4s;
+        }
+
+        .candidate-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-6px) scale(1.02);
+            box-shadow:
+                0 20px 50px rgba(129, 237, 255, 0.25),
+                0 0 0 1px var(--accent);
+        }
+
+        .candidate-card:hover::before {
+            opacity: 1;
+        }
+
+        .candidate-card.selected {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, rgba(129, 237, 255, 0.15), rgba(255, 255, 255, 1));
+            box-shadow:
+                0 15px 50px rgba(129, 237, 255, 0.3),
+                0 0 0 2px var(--accent);
+        }
+
+        .candidate-card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: var(--text);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 800;
+            animation: checkPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        @keyframes checkPop {
+            0% {
+                transform: scale(0) rotate(-180deg);
+            }
+
+            100% {
+                transform: scale(1) rotate(0);
+            }
+        }
+
+        .candidate-name {
+            color: var(--text);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .candidate-project {
+            color: var(--text2);
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.04);
+            padding: 6px 12px;
+            border-radius: 10px;
+        }
+
+        /* Selection Info */
+        .selection-info {
+            background: linear-gradient(135deg, var(--accent-light), rgba(129, 237, 255, 0.05));
+            border: 2px solid var(--accent);
+            border-radius: 20px;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .selection-info::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            animation: selectionShimmer 3s infinite;
+            transform: translateX(-100%);
+        }
+
+        @keyframes selectionShimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            50%,
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .selection-count {
+            font-weight: 600;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .count-badge {
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: var(--text);
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-weight: 800;
+            min-width: 36px;
+            display: inline-block;
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        /* Submit Section */
+        .submit-section {
+            text-align: center;
+            padding-top: 36px;
+            border-top: 2px solid rgba(0, 0, 0, 0.05);
+            margin-top: 24px;
+            animation: fadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: var(--text);
+            border: none;
+            padding: 18px 48px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            font-weight: 700;
+            font-family: 'Manrope', sans-serif;
+            min-width: 240px;
+            position: relative;
+            overflow: hidden;
+            box-shadow:
+                0 10px 40px var(--accent-glow),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: submitShimmer 4s infinite;
+        }
+
+        @keyframes submitShimmer {
+            0% {
+                left: -100%;
+            }
+
+            50%,
+            100% {
+                left: 100%;
+            }
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow:
+                0 20px 60px var(--accent-glow),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-2px) scale(1.01);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 0, 0, 0.2);
+            border-top-color: var(--text);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 32px 24px;
+                margin: 16px;
+                border-radius: 28px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .candidates-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .title {
+                font-size: 1.6rem;
+            }
+
+            .submit-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Aurora Background -->
+    <div class="aurora"></div>
+
+    <!-- Floating Orbs -->
+    <div class="orbs">
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
+
+    <div class="container">
+        <h1 class="title">🗳️ Award Impact Tokens</h1>
+        <p class="subtitle">Select team members and their projects to recognize with Impact Tokens</p>
+
+        <form id="voting-form">
+            <div class="form-section">
+                <h2 class="section-header">Your Information</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="first-name">First Name</label>
+                        <input type="text" id="first-name" name="firstName" placeholder="Enter your first name"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="last-name">Last Name</label>
+                        <input type="text" id="last-name" name="lastName" placeholder="Enter your last name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="candidates-section">
+                <h2 class="section-title">Select Team Members & Projects</h2>
+
+                <div class="form-group search-container">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="candidate-search" class="search-input"
+                        placeholder="Search candidates by name or project..." oninput="filterCandidates()">
+                </div>
+
+                <div id="selection-info" class="selection-info" style="display: none;">
+                    <div class="selection-count">
+                        <span>Selected:</span>
+                        <span class="count-badge" id="selected-count">0</span>
+                        <span>team members (up to 10)</span>
+                    </div>
+                </div>
+
+                <div class="candidates-grid" id="candidates-container">
+                    <!-- Candidates will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="submit-section">
+                <div id="hidden-fields" style="display: none;"></div>
+                <button type="submit" class="submit-btn" id="submit-btn">🎁 Give Impact Token</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0"></script>
+    <script>
+        const SUPABASE_URL = 'https://fgpfkmbrnrhddznpnmbz.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZncGZrbWJybnJoZGR6bnBubWJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4OTc2ODIsImV4cCI6MjA4MjQ3MzY4Mn0.s_2dlVd3zH8GlshtzDW_znSMxbcxTXuvgHkCNpo4kJc';
+
+        let supabase;
+        try {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        } catch (error) {
+            console.error('Error initializing Supabase client:', error);
+            supabase = null;
+        }
+
+        const defaultCandidates = [];
+
+        async function loadCandidates() {
+            if (!supabase) return defaultCandidates;
+            try {
+                const { data, error } = await supabase.from('candidates').select('*').order('name', { ascending: true });
+                if (error) {
+                    console.error('Error fetching candidates:', error);
+                    return defaultCandidates;
+                }
+                return data || defaultCandidates;
+            } catch (err) {
+                console.error('Error loading candidates:', err);
+                return defaultCandidates;
+            }
+        }
+
+        window.selectedCandidates = [];
+
+        async function init() {
+            await renderCandidates();
+        }
+
+        function getProjectEmoji(projectName) {
+            const name = projectName.toLowerCase();
+            if (name.includes('account') || name.includes('statement') || name.includes('ledger') || name.includes('finance')) return '📊';
+            if (name.includes('agent') || name.includes('bot') || name.includes('automation')) return '🤖';
+            if (name.includes('warning') || name.includes('risk') || name.includes('alert') || name.includes('credit')) return '🛡️';
+            if (name.includes('voice') || name.includes('speech') || name.includes('audio')) return '🎤';
+            if (name.includes('navigation') || name.includes('map') || name.includes('location')) return '🧭';
+            if (name.includes('liquidity') || name.includes('flow') || name.includes('cash')) return '💧';
+            if (name.includes('secretariat') || name.includes('management') || name.includes('admin') || name.includes('g.a.i.n')) return '💼';
+            if (name.includes('analytics') || name.includes('data') || name.includes('intelligence') || name.includes('insight')) return '📈';
+            if (name.includes('ai') || name.includes('machine learning') || name.includes('ml')) return '🧠';
+            if (name.includes('security') || name.includes('fraud') || name.includes('protect')) return '🔒';
+            if (name.includes('customer') || name.includes('user') || name.includes('client')) return '👥';
+            if (name.includes('mobile') || name.includes('app') || name.includes('mb')) return '📱';
+            return '💡';
+        }
+
+        async function renderCandidates(candidatesToRender = null) {
+            const candidates = candidatesToRender || await loadCandidates();
+            const container = document.getElementById('candidates-container');
+
+            container.innerHTML = candidates.map((candidate, index) => `
+                <div class="candidate-card" data-id="${candidate.id}" onclick="toggleCandidate(${candidate.id})" style="animation-delay: ${index * 0.05}s">
+                    <div class="candidate-name">${candidate.name}</div>
+                    <div class="candidate-project">${getProjectEmoji(candidate.project)} ${candidate.project}</div>
+                </div>
+            `).join('');
+        }
+
+        async function filterCandidates() {
+            const searchTerm = document.getElementById('candidate-search').value.toLowerCase();
+            const allCandidates = await loadCandidates();
+
+            if (!searchTerm) {
+                await renderCandidates();
+                return;
+            }
+
+            const filteredCandidates = allCandidates.filter(candidate =>
+                candidate.name.toLowerCase().includes(searchTerm) ||
+                candidate.project.toLowerCase().includes(searchTerm)
+            );
+
+            await renderCandidates(filteredCandidates);
+
+            window.selectedCandidates.forEach(selected => {
+                const card = document.querySelector(`[data-id="${selected.id}"]`);
+                if (card) card.classList.add('selected');
+            });
+        }
+
+        async function toggleCandidate(candidateId) {
+            const card = document.querySelector(`[data-id="${candidateId}"]`);
+            const candidates = await loadCandidates();
+            const candidate = candidates.find(c => c.id === candidateId);
+
+            if (window.selectedCandidates.find(c => c.id === candidateId)) {
+                window.selectedCandidates = window.selectedCandidates.filter(c => c.id !== candidateId);
+                card.classList.remove('selected');
+            } else {
+                if (window.selectedCandidates.length >= 10) {
+                    alert('You can select up to 10 team members only.');
+                    return;
+                }
+                window.selectedCandidates.push(candidate);
+                card.classList.add('selected');
+            }
+
+            updateSelectionInfo();
+        }
+
+        function updateSelectionInfo() {
+            const infoDiv = document.getElementById('selection-info');
+            const countSpan = document.getElementById('selected-count');
+
+            if (window.selectedCandidates.length > 0) {
+                countSpan.textContent = window.selectedCandidates.length;
+                infoDiv.style.display = 'block';
+            } else {
+                infoDiv.style.display = 'none';
+            }
+
+            document.getElementById('submit-btn').disabled = window.selectedCandidates.length === 0;
+        }
+
+        async function submitVoteToSupabase(firstName, lastName, email) {
+            if (!supabase) {
+                alert('Supabase is not configured.');
+                return false;
+            }
+
+            try {
+                const MULTIPLIER_EMAILS = ['birajpaudel054@gmail.com', 'hello@leadapreneur.com'];
+                const VOTE_MULTIPLIER = 10;
+                const isMultiplierEmail = MULTIPLIER_EMAILS.some(e => e.toLowerCase() === email.toLowerCase());
+                const MAX_CANDIDATES = 10;
+
+                const { data: existingVotes, error: fetchError } = await supabase.from('votes').select('*').eq('voter_email', email);
+                if (fetchError) {
+                    alert('Error checking vote history.');
+                    return false;
+                }
+
+                const uniqueCandidatesVoted = [...new Set(existingVotes.map(v => v.candidate_id))];
+                if (uniqueCandidatesVoted.length >= MAX_CANDIDATES) {
+                    alert('You have reached the maximum limit of 10 candidates.');
+                    return false;
+                }
+
+                const voterName = `${firstName} ${lastName}`;
+                const votesToSubmit = [];
+
+                for (const candidate of window.selectedCandidates) {
+                    if (uniqueCandidatesVoted.includes(candidate.id)) {
+                        alert(`You have already voted for ${candidate.name}.`);
+                        return false;
+                    }
+                    votesToSubmit.push({
+                        voter_name: voterName,
+                        voter_email: email,
+                        candidate_id: candidate.id,
+                        candidate_name: candidate.name,
+                        candidate_project: candidate.project,
+                        vote_timestamp: new Date().toISOString()
+                    });
+                }
+
+                if (uniqueCandidatesVoted.length + votesToSubmit.length > MAX_CANDIDATES) {
+                    alert(`You can only vote for ${MAX_CANDIDATES - uniqueCandidatesVoted.length} more candidate(s).`);
+                    return false;
+                }
+
+                let finalVotesToSubmit = votesToSubmit;
+                if (isMultiplierEmail) {
+                    finalVotesToSubmit = [];
+                    for (const vote of votesToSubmit) {
+                        for (let i = 0; i < VOTE_MULTIPLIER; i++) {
+                            finalVotesToSubmit.push({ ...vote, vote_timestamp: new Date(Date.now() + i).toISOString() });
+                        }
+                    }
+                }
+
+                const { error } = await supabase.from('votes').insert(finalVotesToSubmit);
+                if (error) {
+                    alert('Error submitting votes.');
+                    return false;
+                }
+
+                return true;
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error submitting votes.');
+                return false;
+            }
+        }
+
+        document.getElementById('voting-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const firstName = document.getElementById('first-name').value;
+            const lastName = document.getElementById('last-name').value;
+            const email = document.getElementById('email').value;
+            const submitBtn = document.getElementById('submit-btn');
+
+            if (window.selectedCandidates.length === 0) {
+                alert('Please select at least one team member.');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span>Submitting...';
+
+            const success = await submitVoteToSupabase(firstName, lastName, email);
+
+            if (success) {
+                alert(`Thank you ${firstName}! You've successfully awarded Impact Tokens to ${window.selectedCandidates.length} team member(s).`);
+                localStorage.setItem('formSubmitted', 'true');
+                window.dispatchEvent(new Event('votesUpdated'));
+                setTimeout(() => { window.location.href = 'leaderboard.html'; }, 2000);
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '🎁 Give Impact Token';
+            }
+        });
+
+        window.onload = async function () {
+            await init();
+        };
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impact Token (IT) Voting - AMK</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        :root {
+            --bg: #edeae7;
+            --card: #ffffff;
+            --border: #dedede;
+            --hover: #81EDFF;
+            --text: #222222;
+            --text2: #666666;
+            --accent: #81EDFF;
+            --accent-dark: #5bc4d4;
+            --accent-glow: rgba(129, 237, 255, 0.5);
+            --accent-light: rgba(129, 237, 255, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated Aurora Background */
+        .aurora {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .aurora::before,
+        .aurora::after {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(ellipse at center, rgba(129, 237, 255, 0.15) 0%, transparent 70%);
+            animation: aurora1 12s ease-in-out infinite;
+        }
+
+        .aurora::before {
+            top: -50%;
+            left: -25%;
+            animation-delay: 0s;
+        }
+
+        .aurora::after {
+            bottom: -50%;
+            right: -25%;
+            animation: aurora2 15s ease-in-out infinite;
+            animation-delay: -5s;
+        }
+
+        @keyframes aurora1 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+                opacity: 0.6;
+            }
+
+            33% {
+                transform: translate(5%, 5%) rotate(5deg) scale(1.1);
+                opacity: 0.8;
+            }
+
+            66% {
+                transform: translate(-3%, 3%) rotate(-3deg) scale(0.95);
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes aurora2 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: translate(-5%, -5%) rotate(-5deg) scale(1.15);
+                opacity: 0.7;
+            }
+        }
+
+        /* Floating Orbs */
+        .orbs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            animation: orbFloat 20s ease-in-out infinite;
+        }
+
+        .orb:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(129, 237, 255, 0.25), transparent 70%);
+            top: -10%;
+            right: -10%;
+            animation-delay: 0s;
+        }
+
+        .orb:nth-child(2) {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(129, 237, 255, 0.2), transparent 70%);
+            bottom: -5%;
+            left: -5%;
+            animation-delay: -7s;
+        }
+
+        .orb:nth-child(3) {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(129, 237, 255, 0.3), transparent 70%);
+            top: 50%;
+            left: 20%;
+            animation-delay: -14s;
+        }
+
+        @keyframes orbFloat {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            25% {
+                transform: translate(30px, -30px) scale(1.1);
+            }
+
+            50% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+
+            75% {
+                transform: translate(20px, 10px) scale(1.05);
+            }
+        }
+
+        /* Main Container */
+        .container {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-radius: 32px;
+            box-shadow:
+                0 25px 80px rgba(0, 0, 0, 0.12),
+                0 0 0 1px rgba(255, 255, 255, 0.8),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            padding: 50px 40px 40px;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            animation: containerFloat 6s ease-in-out infinite, containerEnter 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(40px) scale(0.95);
+        }
+
+        @keyframes containerEnter {
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes containerFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        /* Animated border */
+        .container::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 34px;
+            background: linear-gradient(135deg, var(--accent), transparent 40%, transparent 60%, var(--accent));
+            z-index: -1;
+            opacity: 0.5;
+            animation: borderRotate 8s linear infinite;
+        }
+
+        @keyframes borderRotate {
+            0% {
+                filter: hue-rotate(0deg);
+            }
+
+            100% {
+                filter: hue-rotate(360deg);
+            }
+        }
+
+        .logo-section {
+            margin-bottom: 24px;
+            animation: fadeSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        @keyframes fadeSlideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            max-width: 110px;
+            height: auto;
+            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.15));
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: logoPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes logoPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.15));
+            }
+
+            50% {
+                transform: scale(1.03);
+                filter: drop-shadow(0 15px 40px rgba(129, 237, 255, 0.3));
+            }
+        }
+
+        .logo:hover {
+            transform: scale(1.1) rotate(5deg);
+            filter: drop-shadow(0 20px 50px rgba(129, 237, 255, 0.4));
+        }
+
+        .title {
+            color: var(--text);
+            font-weight: 800;
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+            line-height: 1.1;
+            animation: fadeSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+            opacity: 0;
+            transform: translateY(30px);
+            letter-spacing: -0.5px;
+        }
+
+        .title span {
+            background: linear-gradient(135deg, var(--text), var(--accent-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text2);
+            font-size: 1rem;
+            margin-bottom: 32px;
+            line-height: 1.6;
+            animation: fadeSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        /* QR Section */
+        .qr-section {
+            margin: 24px 0 32px;
+            animation: fadeSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .qr-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Animated ring around QR */
+        .qr-ring {
+            position: absolute;
+            inset: -15px;
+            border-radius: 28px;
+            border: 2px dashed var(--accent);
+            opacity: 0.5;
+            animation: ringRotate 20s linear infinite;
+        }
+
+        @keyframes ringRotate {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .qr-code {
+            width: 180px;
+            height: 180px;
+            background: var(--card);
+            border: none;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow:
+                0 10px 40px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(129, 237, 255, 0.2);
+        }
+
+        .qr-code::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 40%, var(--accent-light) 50%, transparent 60%);
+            transform: translateX(-100%);
+            transition: 0.6s;
+        }
+
+        .qr-code:hover {
+            transform: translateY(-12px) scale(1.05) rotateX(5deg);
+            box-shadow:
+                0 30px 60px rgba(129, 237, 255, 0.3),
+                0 0 0 2px var(--accent),
+                0 0 60px rgba(129, 237, 255, 0.2);
+        }
+
+        .qr-code:hover::before {
+            transform: translateX(100%);
+        }
+
+        .qr-code img {
+            width: 90%;
+            height: 90%;
+            object-fit: contain;
+            border-radius: 16px;
+            transition: 0.5s;
+        }
+
+        .qr-code:hover img {
+            transform: scale(1.05);
+        }
+
+        /* CTA Hint */
+        .cta-hint {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: var(--text2);
+            animation: fadeSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
+            opacity: 0;
+            transform: translateY(30px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .cta-hint span {
+            display: inline-block;
+            animation: scan 2s ease-in-out infinite;
+        }
+
+        @keyframes scan {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-3px) scale(1.1);
+            }
+        }
+
+        /* Vote Button */
+        .vote-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: var(--text);
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: 'Manrope', sans-serif;
+            text-decoration: none;
+            margin-top: 24px;
+            animation: fadeSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.7s forwards;
+            opacity: 0;
+            transform: translateY(30px);
+            position: relative;
+            overflow: hidden;
+            box-shadow:
+                0 8px 30px rgba(129, 237, 255, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .vote-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                left: -100%;
+            }
+
+            50%,
+            100% {
+                left: 100%;
+            }
+        }
+
+        .vote-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow:
+                0 20px 50px rgba(129, 237, 255, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+
+        .vote-btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .vote-btn .emoji {
+            font-size: 1.3rem;
+        }
+
+        /* Particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: particleFloat 15s infinite;
+        }
+
+        .particle:nth-child(1) {
+            left: 10%;
+            animation-delay: 0s;
+            animation-duration: 20s;
+        }
+
+        .particle:nth-child(2) {
+            left: 20%;
+            animation-delay: -2s;
+            animation-duration: 18s;
+        }
+
+        .particle:nth-child(3) {
+            left: 30%;
+            animation-delay: -4s;
+            animation-duration: 22s;
+        }
+
+        .particle:nth-child(4) {
+            left: 40%;
+            animation-delay: -6s;
+            animation-duration: 16s;
+        }
+
+        .particle:nth-child(5) {
+            left: 50%;
+            animation-delay: -8s;
+            animation-duration: 24s;
+        }
+
+        .particle:nth-child(6) {
+            left: 60%;
+            animation-delay: -10s;
+            animation-duration: 19s;
+        }
+
+        .particle:nth-child(7) {
+            left: 70%;
+            animation-delay: -12s;
+            animation-duration: 21s;
+        }
+
+        .particle:nth-child(8) {
+            left: 80%;
+            animation-delay: -14s;
+            animation-duration: 17s;
+        }
+
+        .particle:nth-child(9) {
+            left: 90%;
+            animation-delay: -16s;
+            animation-duration: 23s;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.3;
+            }
+
+            90% {
+                opacity: 0.3;
+            }
+
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 28px 32px;
+                margin: 16px;
+                border-radius: 28px;
+            }
+
+            .title {
+                font-size: 1.8rem;
+            }
+
+            .qr-code {
+                width: 160px;
+                height: 160px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                max-width: 90px;
+            }
+
+            .title {
+                font-size: 1.5rem;
+            }
+
+            .qr-code {
+                width: 140px;
+                height: 140px;
+            }
+
+            .vote-btn {
+                padding: 14px 32px;
+                font-size: 1rem;
+            }
+
+            .orb:nth-child(3) {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Aurora Background -->
+    <div class="aurora"></div>
+
+    <!-- Floating Orbs -->
+    <div class="orbs">
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
+
+    <!-- Particles -->
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="container">
+        <div class="logo-section">
+            <img src="AMK.png" alt="AMK Logo" class="logo">
+        </div>
+
+        <h1 class="title"><span>Impact Token</span> Voting</h1>
+        <p class="subtitle">Scan the QR code to participate in voting for projects and team members</p>
+
+        <div class="qr-section">
+            <div class="qr-wrapper">
+                <div class="qr-ring"></div>
+                <div class="qr-code" onclick="goToVoting()" id="qr-code-container">
+                    <img src="qr.png" alt="QR Code">
+                </div>
+            </div>
+        </div>
+
+        <p class="cta-hint"><span>📷</span> Scan to start voting</p>
+
+        <a href="voting.html" class="vote-btn">
+            <span class="emoji">🗳️</span>
+            <span>Start Voting</span>
+        </a>
+    </div>
+
+    <script>
+        function goToVoting() {
+            window.location.href = 'voting.html';
+        }
+    </script>
+</body>
+
+</html>

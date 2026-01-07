@@ -1,0 +1,7 @@
+# Basic route redirects
+/voting.html    /voting.html    200
+/leaderboard.html  /leaderboard.html  200
+/admin.html    /admin.html    200
+
+# SPA fallback for client-side routing
+/*  /index.html  200
